@@ -3,6 +3,7 @@
 	<name>Sudoku Solver Tests</name>
 	<comment></comment>
 	<projects>
+		<project>sudoko-solver</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
