@@ -6,12 +6,12 @@ public class PuzzleUnitTest {
 
 	Puzzle testPuzzle = new Puzzle();
 	
-//	@Test
-//	public void puzzleCreationSizeTest() {
-//		// Does the puzzle get created as a 9x9.
-//		assertEquals("9th column and 9th row cell was not zero", 0, testPuzzle.getCell(8, 8));
-//	}
-//	
+	@Test
+	public void puzzleCreationSizeTest() {
+		// Does the puzzle get created as a 9x9.
+		assertEquals("9th column and 9th row cell was not zero", 0, testPuzzle.getCell(8, 8));
+	}
+	
 //	@Test(expected=Exception.class)
 //	public void tenthColumnFailTest() {
 //		// Update this to be specific about the error.

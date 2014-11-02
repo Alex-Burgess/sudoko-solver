@@ -1,4 +1,8 @@
 
-public class Solver {
 
+public class Solver {
+	Puzzle myPuzzle = new Puzzle();
+	
+	
+	
 }
