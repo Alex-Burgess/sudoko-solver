@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Puzzle {
 	ArrayList<int[]> rows = new ArrayList<int[]>();
@@ -23,7 +24,7 @@ public class Puzzle {
 	
 	public void printPuzzle(){
 		for (int i = 0; i < 9; i++ )
-			System.out.println(rows.get(i));
+			System.out.println(Arrays.toString(rows.get(i)));
 	}
 
 }

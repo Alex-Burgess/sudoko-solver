@@ -1,8 +1,11 @@
 
 
 public class Solver {
-	Puzzle myPuzzle = new Puzzle();
 	
-	
-	
+	public static void main(String[] args){
+		Puzzle myPuzzle = new Puzzle();
+		
+		
+		myPuzzle.printPuzzle();
+	}
 }
