@@ -87,17 +87,25 @@ public class PuzzleUnitTest {
 	
 	@Test(expected=Exception.class)
 	public void duplicateNumberToGridFailTest3() throws Exception{
+		Puzzle testPuzzle2 = new Puzzle();
 		// Use the bottom, right grid of the puzzle to test that duplicate values cannot be added.
-		testPuzzle.setCell(3, 6, 1);	// Add a 1 to column 4, row 7.
-		testPuzzle.setCell(5, 8, 1);	// Add a 1 to column 6, row 9.
+		testPuzzle2.setCell(3, 6, 1);	// Add a 1 to column 4, row 7.
+		testPuzzle2.setCell(5, 8, 1);	// Add a 1 to column 6, row 9.
 		assertEquals("Adding a duplicate value to column 6, row 9 worked", 1, testPuzzle.getCell(5, 8));	// test to see if the value of column 9, row 9 is 1.
 	}
 	
 	@Test(expected=Exception.class)
 	public void duplicateNumberToGridFailTest4() throws Exception{
+		Puzzle testPuzzle2 = new Puzzle();
 		// Use the bottom, right grid of the puzzle to test that duplicate values cannot be added.
-		testPuzzle.setCell(6, 6, 1);	// Add a 1 to row 7, column 7.
-		testPuzzle.setCell(8, 8, 1);	// Add a 1 to row 9, column 9.
+		testPuzzle2.setCell(6, 6, 1);	// Add a 1 to row 7, column 7.
+		testPuzzle2.setCell(8, 8, 1);	// Add a 1 to row 9, column 9.
 		assertEquals("Adding a duplicate value to column 9, row 9 worked", 1, testPuzzle.getCell(8, 8));	// test to see if the value of column 9, row 9 is 1.
 	}
+	
+	@Test
+	public void checkNotSolved() {
+		assertEquals("The puzzle has been solved", false, testPuzzle.checkSolved());
+	}
+	
 }

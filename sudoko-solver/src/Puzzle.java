@@ -11,6 +11,8 @@ public class Puzzle {
 	// 1 => [0, 0]; 2 => [3, 0]
 	Map<Integer, Integer[]> gridCoordinates = new HashMap<Integer, Integer[]>();
 	
+	//Puzzle(int cellColumn, int cellRow, int cellValue){
+	// TODO test
 	Puzzle(){
 		// Create 9 arrays (rows) of size 9 (columns).
 		for (int i = 0; i < 9; i++ )
@@ -25,12 +27,15 @@ public class Puzzle {
 		gridCoordinates.put(7, new Integer[] {0, 6});	// Internal grid 7
 		gridCoordinates.put(8, new Integer[] {3, 6});	// Internal grid 8
 		gridCoordinates.put(9, new Integer[] {6, 6});	// Internal grid 9
-		
 	}
 	
 	public int getCell(int columnNum, int rowNum){
 		int[] row = rows.get(rowNum);	// Get the row array in question
 		return row[columnNum]; 
+	}
+	
+	public int[] getRow(int rowNum) {
+		return rows.get(rowNum);
 	}
 	
 	public void setCell(int columnNum, int rowNum, int value) throws Exception
@@ -132,6 +137,20 @@ public class Puzzle {
 			}
 		}
 		
+		return true;
+	}
+	
+	public boolean checkSolved() {
+		for(int i = 0; i < 9; i++)
+		{
+			int[] row = rows.get(i);
+			
+			for(int j = 0; j < 9; j++){
+				if(row[j] == 0)
+					return false;
+			}
+		}
+	
 		return true;
 	}
 	
