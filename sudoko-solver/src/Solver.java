@@ -14,7 +14,7 @@ public class Solver {
 	public boolean solve() throws Exception {
 		// Go through each cell, see if it can be solved, by rowCount, then columnCount....
 		int count = 0;
-		int maxLoop = 10;
+		int maxLoop = 20;
 		
 		while (!checkSolved()  && count < maxLoop) {
 			count++;
@@ -33,10 +33,15 @@ public class Solver {
 			}
 		}
 		
-		
-		System.out.println("Puzzle could not be solved. (Number of loops: " + count + ")");
-		System.out.println();
-		myPuzzle.printPuzzle();
+		if(checkSolved()) {
+			System.out.println("Puzzle solved, WAHOO! (Number of loops: " + count + ")");
+			myPuzzle.printPuzzle();
+			return true;
+		}
+		else {
+			System.out.println("Puzzle could not be solved. (Number of loops: " + count + ")");
+			myPuzzle.printPuzzle();
+		}
 		
 		return false;	// Return false unless algorithm runs through and solves the puzzle
 	}
@@ -45,25 +50,25 @@ public class Solver {
 		if (myPuzzle.getCell(colNum, rowNum) > 0)
 			throw new Exception("The cell entered was not empty.");
 		
-		if (myPuzzle.checkRow(rowNum, value) == false)	// Is it possible to add value in row. If it already exists in the row, checkRow returns false
+		if (myPuzzle.isValueInRow(rowNum, value))	// Does the row contain the value already.  If so, it's not possible to add it.
 			return false;
 		
-		if (myPuzzle.checkColumn(colNum, value) == false)	// Is it possible to add value in column.  If it already exists in the column, checkColumn returns false.
+		if (myPuzzle.isValueInColumn(colNum, value))	// Does the column contain the value already.  If so, it's not possible to add it.
 			return false;
 		
-		if (myPuzzle.checkGrid(colNum, rowNum, value) == false)	// Is it possible to add value in grid.
+		if (myPuzzle.isValueInGrid(colNum, rowNum, value))	// Does the grid contain the value already.  If so, it's not possible to add it.
 			return false;
 		
 		// Value can possibly be added to the cell.
 		// Can all of the other free cells be eliminated as possibilities for taking this value?  if all other free cells can be eliminated, return true.
 		
-		if (eliminateByRowOrColumn("column", colNum, value) == true)	// Attempt to eliminate the other free cells in the column
+		if (eliminateByRowOrColumn("column", colNum, value))	// Attempt to eliminate the other free cells in the column
 			return true;
 		
-		if (eliminateByRowOrColumn("row", rowNum, value) == true)	// Attempt to eliminate the other free cells in the row
+		if (eliminateByRowOrColumn("row", rowNum, value))	// Attempt to eliminate the other free cells in the row
 			return true;
 		
-		if (eliminateByGrid(colNum, rowNum, value) == true)		// Attempt to eliminate the other free cells in the grid
+		if (eliminateByGrid(colNum, rowNum, value))		// Attempt to eliminate the other free cells in the grid
 			return true;
 		
 		// If all the possible methods for adding a value failed then cell can not be solved.
@@ -91,7 +96,7 @@ public class Solver {
 			int gridCount = 0;
 			for (int i = 0; i < freeRefs.size(); i++) {
 				int[] freeCellCoordinates = freeRefs.get(i);				
-				if ( myPuzzle.checkColumn(freeCellCoordinates[0], value) && myPuzzle.checkRow(freeCellCoordinates[1], value))
+				if ( !myPuzzle.isValueInColumn(freeCellCoordinates[0], value) && !myPuzzle.isValueInRow(freeCellCoordinates[1], value))
 					gridCount++;
 			}
 			
@@ -103,8 +108,6 @@ public class Solver {
 	}
 	
 	public boolean eliminateByRowOrColumn(String columnOrRow, int columnOrRowNum, int value) throws Exception {
-		
-		// TODO This time check across the row, rather than down the column.
 		// Can all of the other free cells be eliminated as possibilities for taking this value?  if all other free cells can be eliminated, return true.
 		
 		int[] columnOrRowToCheck = new int[9];
@@ -121,14 +124,18 @@ public class Solver {
 		// Check all cells, there should be at least one possibility (this cell), but there could be more.
 		for (int i = 0; i < 9; i++) {
 			if (columnOrRowToCheck[i] == 0){
-				if (columnOrRow == "row")
-					if(myPuzzle.checkColumn(i, value) == true)
+				if (columnOrRow == "row") {
+					if(!myPuzzle.isValueInColumn(i, value))
 						freeRefs.add(new int[]{i, columnOrRowNum});
-				else
-					if(myPuzzle.checkRow(i, value) == true)
+				}
+				else {
+					if(!myPuzzle.isValueInRow(i, value))
 						freeRefs.add(new int[]{columnOrRowNum, i});
-			}
+				}
+			}			
 		}
+		
+//		System.out.println(columnOrRow + " Number of free cells:" + freeRefs.size());
 		
 		// If there is only one possible option to add this value in the row, then the value can be added to this cell
 		if (freeRefs.size() == 1) {
@@ -138,7 +145,7 @@ public class Solver {
 			int gridCount = 0;
 			for (int i = 0; i < freeRefs.size(); i++) {
 				int[] freeCellCoordinates = freeRefs.get(i);				
-				if (myPuzzle.checkGrid(freeCellCoordinates[0], freeCellCoordinates[1], value) == true)
+				if (!myPuzzle.isValueInGrid(freeCellCoordinates[0], freeCellCoordinates[1], value))
 					gridCount++;
 			}
 			
@@ -147,74 +154,7 @@ public class Solver {
 		}
 		
 		return false;
-	}
-	
-//	// Method tries to solve a row that requires only one more cell to be added.
-//	public boolean solveByCount(String itemType, int itemNum) throws Exception {
-//		// Get the item
-//		int[] item = new int[9];
-//		switch(itemType) {
-//		case "row": item = myPuzzle.getRow(itemNum);
-//			break;
-//		case "column": item = myPuzzle.getColumn(itemNum);
-//			break;
-//		default: throw new Exception("Item Type entered was not correct.  itemType must be row, column, or grid.");
-//		}
-//		
-//		// Check to see if the row is complete
-//		int missingCount = 0;
-//		for (int i = 0; i < item.length; i++)
-//			if (item[i] == 0)
-//				missingCount++;
-//		
-//		if (missingCount != 1)
-//			return false;
-//		
-//		List<Integer> itemList = new ArrayList<Integer>();
-//		for (int i = 0; i < item.length; i++)
-//			itemList.add(item[i]);
-//		
-//		for (int i = 1; i <= 9; i++)
-//			if(! itemList.contains(i))
-//				myPuzzle.setCell(itemList.indexOf(0), itemNum, i);
-//		
-//		return true;
-//	}
-//	
-//	// Method tries to solve a row that requires only one more cell to be added.
-//	public boolean solveGridByCount(int gridNum) throws Exception {
-//		// Get the item
-//		List<int[]> gridRows = myPuzzle.getGrid(gridNum);
-//		
-//		Integer[] gridCoordinates = myPuzzle.getGridCoordinates(gridNum);
-//		
-//		// Check to see if the row is complete
-//		List<int[]> emptyCellCoordinates = new ArrayList<int[]>();
-//		
-//		// List to store values in grid
-//		List<Integer> setValues = new ArrayList<Integer>();
-//		
-//		for (int i = 0; i < gridRows.size(); i++ ) {
-//			int[] gridRow = gridRows.get(i);
-//			for (int j = 0; j < gridRow.length; j++)
-//				if(gridRow[j] == 0)
-//					emptyCellCoordinates.add(new int[]{j, i});
-//				else
-//					setValues.add(gridRow[j]);
-//		}
-//		
-//		if (emptyCellCoordinates.size() != 1)
-//			return false;
-//		
-//		for (int i = 1; i <= 9; i++)
-//			if(! setValues.contains(i)) {
-//				int[] coordinatesToUse = emptyCellCoordinates.get(0);
-//				myPuzzle.setCell(coordinatesToUse[0] + gridCoordinates[0], coordinatesToUse[1] + gridCoordinates[1], i);
-//			}
-//		
-//		return true;
-//	}
-	
+	}	
 	
 	public boolean checkSolved() {
 		for(int i = 0; i < 9; i++)

@@ -28,13 +28,51 @@ public class Puzzle {
 		gridCoordinates.put(9, new Integer[] {6, 6});	// Internal grid 9
 	}
 	
+	public boolean isValueInColumn(int colNum, int value)
+	{
+		// Checks that the value does not exist in the column.  False means it is already present.
+		for(int i = 0; i < 9; i++)
+		{
+			int[] row = rows.get(i);
+			
+			if(row[colNum] == value)
+				return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean isValueInGrid(int colNum, int rowNum, int value)
+	{
+		// Checks whether the grid number entered contains the value.	
+		Integer[] gridCorner = gridCoordinates.get(getGridNum(colNum, rowNum));
+				
+		for(int i = gridCorner[1]; i < gridCorner[1] + 3; i++) {
+			int[] row = rows.get(i);
+			for(int j = gridCorner[0]; j < gridCorner[0] + 3; j++) {
+				if(row[j] == value)
+					return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean isValueInRow(int rowNum, int value)
+	{
+		// Checks that the value does not exist in the row.  False means it is already present.
+		int[] row = rows.get(rowNum);
+		
+		for(int i = 0; i < 9; i++)
+			if(row[i] == value)
+				return true;
+		
+		return false;
+	}
+	
 	public int getCell(int colNum, int rowNum){
 		int[] row = rows.get(rowNum);	// Get the row array in question
 		return row[colNum]; 
-	}
-	
-	public int[] getRow(int rowNum) {
-		return rows.get(rowNum);
 	}
 	
 	public int[] getColumn(int colNum) {
@@ -66,55 +104,6 @@ public class Puzzle {
 		}
 		
 		return gridRows;
-	}
-	
-	public void setCell(int colNum, int rowNum, int value) throws Exception
-	{
-		// Check if the value is between 1 and 9.
-		if(value < 1 || value > 9)
-			throw new Exception("Rule violation: Value being added to cell is not in the range of 1-9.");
-		
-		int[] row = rows.get(rowNum);	// Get the row array in question
-		
-		if(row[colNum] != 0)
-			throw new Exception("Rule violation: Cell already contains a value. Column ("+ colNum +"), Row ("+ rowNum +").");
-		
-		if(checkRow(rowNum, value) == false)
-			throw new Exception("Rule violation: Row already contains a value. Column ("+ colNum +"), Row ("+ rowNum +").");
-		
-		if(checkColumn(colNum, value) == false)
-			throw new Exception("Rule violation: Column already contains a value. Column ("+ colNum +"), Row ("+ rowNum +").");
-		
-		if(checkGrid(colNum, rowNum, value) == false)
-			throw new Exception("Rule violation: Grid already contains a value. Column ("+ colNum +"), Row ("+ rowNum +").");
-		
-		row[colNum] = value;
-	}
-	
-	public boolean checkRow(int rowNum, int value)
-	{
-		// Checks that the value does not exist in the row.  False means it is already present.
-		int[] row = rows.get(rowNum);
-		
-		for(int i = 0; i < 9; i++)
-			if(row[i] == value)
-				return false;
-		
-		return true;
-	}
-	
-	public boolean checkColumn(int colNum, int value)
-	{
-		// Checks that the value does not exist in the column.  False means it is already present.
-		for(int i = 0; i < 9; i++)
-		{
-			int[] row = rows.get(i);
-			
-			if(row[colNum] == value)
-				return false;
-		}
-		
-		return true;
 	}
 	
 	public Integer[] getGridCoordinates(int gridNumber){
@@ -154,25 +143,36 @@ public class Puzzle {
 		return gridNum;
 	}
 	
-	public boolean checkGrid(int colNum, int rowNum, int value)
-	{
-		// Checks whether the grid number entered contains the value.	
-		Integer[] gridCorner = gridCoordinates.get(getGridNum(colNum, rowNum));
-				
-		for(int i = gridCorner[1]; i < gridCorner[1] + 3; i++) {
-			int[] row = rows.get(i);
-			for(int j = gridCorner[0]; j < gridCorner[0] + 3; j++) {
-				if(row[j] == value)
-					return false;
-			}
-		}
-		
-		return true;
+	public int[] getRow(int rowNum) {
+		return rows.get(rowNum);
 	}
 	
 	public void printPuzzle(){
 		for (int i = 0; i < 9; i++ )
 			System.out.println(Arrays.toString(rows.get(i)));
+	}
+	
+	public void setCell(int colNum, int rowNum, int value) throws Exception
+	{
+		// Check if the value is between 1 and 9.
+		if(value < 1 || value > 9)
+			throw new Exception("Rule violation: Value being added to cell is not in the range of 1-9.");
+		
+		int[] row = rows.get(rowNum);	// Get the row array in question
+		
+		if(row[colNum] != 0)
+			throw new Exception("Rule violation: Cell already contains a value. Column ("+ colNum +"), Row ("+ rowNum +").");
+		
+		if(isValueInRow(rowNum, value))
+			throw new Exception("Rule violation: Row already contains a value. Column ("+ colNum +"), Row ("+ rowNum +").");
+		
+		if(isValueInColumn(colNum, value))
+			throw new Exception("Rule violation: Column already contains a value. Column ("+ colNum +"), Row ("+ rowNum +").");
+		
+		if(isValueInGrid(colNum, rowNum, value))
+			throw new Exception("Rule violation: Grid already contains a value. Column ("+ colNum +"), Row ("+ rowNum +").");
+		
+		row[colNum] = value;
 	}
 
 }
