@@ -20,7 +20,6 @@ public class PuzzleUnitTest {
 	
 	@Test(expected=Exception.class)
 	public void tenthRowFailTest() {
-		// TODO Update this to be specific about the error.
 		assertEquals("Could not add a 10th row cell", 0, testPuzzle.getCell(8, 9));
 	}
 	
@@ -101,11 +100,6 @@ public class PuzzleUnitTest {
 		testPuzzle2.setCell(6, 6, 1);	// Add a 1 to row 7, column 7.
 		testPuzzle2.setCell(8, 8, 1);	// Add a 1 to row 9, column 9.
 		assertEquals("Adding a duplicate value to column 9, row 9 worked", 1, testPuzzle.getCell(8, 8));	// test to see if the value of column 9, row 9 is 1.
-	}
-	
-	@Test
-	public void checkNotSolved() {
-		assertEquals("The puzzle has been solved", false, testPuzzle.checkSolved());
 	}
 	
 }

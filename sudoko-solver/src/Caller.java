@@ -9,12 +9,12 @@ public class Caller {
 		entryValues.put(new Integer[]{0,  0}, 1);
 		Solver solve = new Solver(entryValues);
 		
-		if (solve.getSolution() == true)
+		if (solve.checkSolved() == true)
 			System.out.println("Solved");
 		else
 			System.out.println("Not Solved");
 		
 		// Print the solution
-		//solve.getLatest();
+		solve.myPuzzle.printPuzzle();
 	}
 }

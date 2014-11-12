@@ -1,18 +1,17 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Puzzle {
-	ArrayList<int[]> rows = new ArrayList<int[]>();
+	private ArrayList<int[]> rows = new ArrayList<int[]>();
 	
 	// The sudoku puzzle has 9 internal grids, number 1, 2 & 3 on the top row, number 4, 5 & 6 middle row and 7, 8 & 9 top row. 
-	// Create hashmap with Key as the grid number, pointing to an array of lowestColumnNum & lowestRowNum
+	// Create hashmap with Key as the grid number, pointing to an array of lowestcolNum & lowestRowNum
 	// 1 => [0, 0]; 2 => [3, 0]
-	Map<Integer, Integer[]> gridCoordinates = new HashMap<Integer, Integer[]>();
+	private Map<Integer, Integer[]> gridCoordinates = new HashMap<Integer, Integer[]>();
 	
-	//Puzzle(int cellColumn, int cellRow, int cellValue){
-	// TODO test
 	Puzzle(){
 		// Create 9 arrays (rows) of size 9 (columns).
 		for (int i = 0; i < 9; i++ )
@@ -29,16 +28,47 @@ public class Puzzle {
 		gridCoordinates.put(9, new Integer[] {6, 6});	// Internal grid 9
 	}
 	
-	public int getCell(int columnNum, int rowNum){
+	public int getCell(int colNum, int rowNum){
 		int[] row = rows.get(rowNum);	// Get the row array in question
-		return row[columnNum]; 
+		return row[colNum]; 
 	}
 	
 	public int[] getRow(int rowNum) {
 		return rows.get(rowNum);
 	}
 	
-	public void setCell(int columnNum, int rowNum, int value) throws Exception
+	public int[] getColumn(int colNum) {
+		int[] column = new int[9];
+		
+		for(int i = 0; i < 9; i++)
+		{
+			int[] row = rows.get(i);
+			column[i] = row[colNum];
+		}
+		
+		return column;
+	}
+	
+	public List<int[]> getGrid(int gridNum) {		
+		// Object that will store 3 rows, of length 3
+		List<int[]> gridRows = new ArrayList<int[]>();
+		
+		// Get the grid corner coordinates.  These are used to traverse the grid.	
+		Integer[] gridCorner = gridCoordinates.get(gridNum);
+		
+		// Go through the row array and take the section of 3 values relating to the columns.
+		for(int i = gridCorner[1]; i < gridCorner[1] + 3; i++) {
+			int[] row = rows.get(i);
+			// Split the array starting on the column grid coordinate.			
+			int[] gridRow = {row[gridCorner[0]], row[gridCorner[0] + 1], row[gridCorner[0] + 2]};
+			
+			gridRows.add(gridRow);
+		}
+		
+		return gridRows;
+	}
+	
+	public void setCell(int colNum, int rowNum, int value) throws Exception
 	{
 		// Check if the value is between 1 and 9.
 		if(value < 1 || value > 9)
@@ -46,19 +76,19 @@ public class Puzzle {
 		
 		int[] row = rows.get(rowNum);	// Get the row array in question
 		
-		if(row[columnNum] != 0)
-			throw new Exception("Rule violation: Cell already contains a value. Column ("+ columnNum +"), Row ("+ rowNum +").");
+		if(row[colNum] != 0)
+			throw new Exception("Rule violation: Cell already contains a value. Column ("+ colNum +"), Row ("+ rowNum +").");
 		
 		if(checkRow(rowNum, value) == false)
-			throw new Exception("Rule violation: Row already contains a value. Column ("+ columnNum +"), Row ("+ rowNum +").");
+			throw new Exception("Rule violation: Row already contains a value. Column ("+ colNum +"), Row ("+ rowNum +").");
 		
-		if(checkColumn(columnNum, value) == false)
-			throw new Exception("Rule violation: Column already contains a value. Column ("+ columnNum +"), Row ("+ rowNum +").");
+		if(checkColumn(colNum, value) == false)
+			throw new Exception("Rule violation: Column already contains a value. Column ("+ colNum +"), Row ("+ rowNum +").");
 		
-		if(checkGrid(columnNum, rowNum, value) == false)
-			throw new Exception("Rule violation: Grid already contains a value. Column ("+ columnNum +"), Row ("+ rowNum +").");
+		if(checkGrid(colNum, rowNum, value) == false)
+			throw new Exception("Rule violation: Grid already contains a value. Column ("+ colNum +"), Row ("+ rowNum +").");
 		
-		row[columnNum] = value;
+		row[colNum] = value;
 	}
 	
 	public boolean checkRow(int rowNum, int value)
@@ -73,14 +103,14 @@ public class Puzzle {
 		return true;
 	}
 	
-	public boolean checkColumn(int columnNum, int value)
+	public boolean checkColumn(int colNum, int value)
 	{
 		// Checks that the value does not exist in the column.  False means it is already present.
 		for(int i = 0; i < 9; i++)
 		{
 			int[] row = rows.get(i);
 			
-			if(row[columnNum] == value)
+			if(row[colNum] == value)
 				return false;
 		}
 		
@@ -92,10 +122,10 @@ public class Puzzle {
 		return gridCoordinate;
 	}
 	
-	public int getGridNum(int columnNum, int rowNum){
+	public int getGridNum(int colNum, int rowNum){
 		int gridNum = 0;
 		
-		if(columnNum <= 2) {
+		if(colNum <= 2) {
 			if(rowNum <=2) {
 				gridNum = 1;
 			} else if(rowNum >= 3 & rowNum <= 5) {
@@ -103,7 +133,7 @@ public class Puzzle {
 			} else {
 				gridNum = 7;
 			}
-		} else if(columnNum >= 3 & columnNum <= 5) {
+		} else if(colNum >= 3 & colNum <= 5) {
 			if(rowNum <=2) {
 				gridNum = 2;
 			} else if(rowNum >= 3 & rowNum <= 5) {
@@ -124,10 +154,10 @@ public class Puzzle {
 		return gridNum;
 	}
 	
-	public boolean checkGrid(int columnNum, int rowNum, int value)
+	public boolean checkGrid(int colNum, int rowNum, int value)
 	{
 		// Checks whether the grid number entered contains the value.	
-		Integer[] gridCorner = gridCoordinates.get(getGridNum(columnNum, rowNum));
+		Integer[] gridCorner = gridCoordinates.get(getGridNum(colNum, rowNum));
 				
 		for(int i = gridCorner[1]; i < gridCorner[1] + 3; i++) {
 			int[] row = rows.get(i);
@@ -137,20 +167,6 @@ public class Puzzle {
 			}
 		}
 		
-		return true;
-	}
-	
-	public boolean checkSolved() {
-		for(int i = 0; i < 9; i++)
-		{
-			int[] row = rows.get(i);
-			
-			for(int j = 0; j < 9; j++){
-				if(row[j] == 0)
-					return false;
-			}
-		}
-	
 		return true;
 	}
 	
