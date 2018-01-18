@@ -34,12 +34,15 @@ public class PuzzleUnitTest {
 	}
 	
 	@Test
-	public void cellOverwriteFailTest() throws Exception{
+	public void cellOverwriteFailTest() throws Exception {
 		// Tests don't run in order, so pick a new cell. Using row 2
 		testPuzzle.setCell(1, 1, 1);
-		testPuzzle.setCell(1, 1, 9);	// Now try to overwrite this field.
-		//assertEquals(9, testPuzzle.getCell(1, 1), "1st column 1st row cell was overwritten");
-		assertEquals(9, testPuzzle.getCell(1, 1), "Rule violation: Cell already contains a value. Column (1), Row (1).");
+		
+		Exception exception = assertThrows(Exception.class, () -> {
+			testPuzzle.setCell(1, 1, 9);	// Now try to overwrite this field.
+		});
+			
+		assertEquals(exception.getMessage(), "Rule violation: Cell already contains a value. Column (1), Row (1)." );
 	}
 	
 	@Test
