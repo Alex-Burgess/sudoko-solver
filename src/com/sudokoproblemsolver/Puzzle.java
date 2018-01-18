@@ -162,16 +162,16 @@ public class Puzzle {
 		int[] row = rows.get(rowNum);	// Get the row array in question
 		
 		if(row[colNum] != 0)
-			throw new Exception("Rule violation: Cell already contains a value. Column ("+ colNum +"), Row ("+ rowNum +").");
+			throw new Exception("Rule violation: Cell already contains the value " + value + ". Column ("+ colNum +"), Row ("+ rowNum +").");
 		
 		if(isValueInRow(rowNum, value))
-			throw new Exception("Rule violation: Row already contains a value. Column ("+ colNum +"), Row ("+ rowNum +").");
+			throw new Exception("Rule violation: Row already contains the value " + value + ". Column ("+ colNum +"), Row ("+ rowNum +").");
 		
 		if(isValueInColumn(colNum, value))
-			throw new Exception("Rule violation: Column already contains a value. Column ("+ colNum +"), Row ("+ rowNum +").");
+			throw new Exception("Rule violation: Column already contains the value " + value + ". Column ("+ colNum +"), Row ("+ rowNum +").");
 		
 		if(isValueInGrid(colNum, rowNum, value))
-			throw new Exception("Rule violation: Grid already contains a value. Column ("+ colNum +"), Row ("+ rowNum +").");
+			throw new Exception("Rule violation: Grid already contains the value " + value + ". Column ("+ colNum +"), Row ("+ rowNum +").");
 		
 		row[colNum] = value;
 	}
