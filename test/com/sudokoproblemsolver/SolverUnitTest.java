@@ -1,9 +1,10 @@
+package com.sudokoproblemsolver;
+
 import static org.junit.Assert.*;
-
 import java.util.HashMap;
-
 import org.junit.Test;
 
+import com.sudokoproblemsolver.Solver;
 
 public class SolverUnitTest {
 	
