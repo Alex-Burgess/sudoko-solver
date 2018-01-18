@@ -24,6 +24,12 @@ public class PuzzleUnitTest {
 	
 	@Test
 	public void tenthRowFailTest() {
+//		Exception exception = assertThrows(Exception.class, () -> {
+//			testPuzzle.getCell(8, 9);	// Now try to overwrite this field.
+//		});
+//			
+//		assertEquals(exception.getMessage(), "Could not add a 10th row cell" );
+		
 		assertEquals(0, testPuzzle.getCell(8, 9), "Could not add a 10th row cell");
 	}
 	
@@ -47,8 +53,11 @@ public class PuzzleUnitTest {
 	
 	@Test
 	public void addInvalidNumberFailTest() throws Exception{
-		testPuzzle.setCell(2, 2, 10);		// Using row 3
-		assertEquals(0, testPuzzle.getCell(2, 2), "Adding a cell value of 10 worked");
+		Exception exception = assertThrows(Exception.class, () -> {
+			testPuzzle.setCell(2, 2, 10);
+		});
+		
+		assertEquals(exception.getMessage(), "Rule violation: Value being added to cell is not in the range of 1-9." );
 	}
 
 	@Test
