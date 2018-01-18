@@ -1,6 +1,6 @@
 package com.sudokoproblemsolver;
 
-//import static org.junit.Assert.*;
+import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
@@ -18,19 +18,16 @@ public class PuzzleUnitTest {
 	
 	@Test
 	public void tenthColumnFailTest() {
-		// Update this to be specific about the error.
-		assertEquals(0, testPuzzle.getCell(9, 8), "Could not add a 10th column cell");
+		Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+			testPuzzle.getCell(9, 8);
+		});
 	}
 	
 	@Test
 	public void tenthRowFailTest() {
-//		Exception exception = assertThrows(Exception.class, () -> {
-//			testPuzzle.getCell(8, 9);	// Now try to overwrite this field.
-//		});
-//			
-//		assertEquals(exception.getMessage(), "Could not add a 10th row cell" );
-		
-		assertEquals(0, testPuzzle.getCell(8, 9), "Could not add a 10th row cell");
+		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
+			testPuzzle.getCell(8, 9);
+		});
 	}
 	
 	@Test
@@ -48,7 +45,7 @@ public class PuzzleUnitTest {
 			testPuzzle.setCell(1, 1, 9);	// Now try to overwrite this field.
 		});
 			
-		assertEquals(exception.getMessage(), "Rule violation: Cell already contains a value. Column (1), Row (1)." );
+		assertEquals(exception.getMessage(), "Rule violation: Cell already contains the value 9. Column (1), Row (1)." );
 	}
 	
 	@Test
@@ -64,16 +61,24 @@ public class PuzzleUnitTest {
 	public void duplicateNumberToRowFailTest() throws Exception{
 		// Adding a 1 to the first cell in a row and 1 to the second cell in a row should fail. Using row 4
 		testPuzzle.setCell(0, 3, 1);	// Add value of 1 to column 1, row 3.
-		testPuzzle.setCell(1, 3, 1);	// Add value of 1 to column 2, row 3.
-		assertEquals(1, testPuzzle.getCell(1, 3), "Adding a duplicate value to column 2, row 4 worked");	// test to see if the value of column 2, row 3 is 1.
+		
+		Exception exception = assertThrows(Exception.class, () -> {
+			testPuzzle.setCell(1, 3, 1);	// Add value of 1 to column 2, row 3.
+		});
+			
+		assertEquals(exception.getMessage(), "Rule violation: Row already contains the value 1. Column (1), Row (3)." );
 	}
 	
 	@Test
 	public void duplicateNumberToColumnFailTest() throws Exception{
 		// Adding a 1 to the first cell in a column and 1 to the second cell in a column should fail. Using column 5
 		testPuzzle.setCell(4, 0, 1);	// Add value of 1 to column 5, row 1.
-		testPuzzle.setCell(4, 1, 1);	// Add value of 1 to column 5, row 2.
-		assertEquals(1, testPuzzle.getCell(4, 2), "Adding a duplicate value to column 5, row 2 worked");	// test to see if the value of column 5, row 2 is 1.
+		
+		Exception exception = assertThrows(Exception.class, () -> {
+			testPuzzle.setCell(4, 1, 1);	// Add value of 1 to column 5, row 2.
+		});
+		
+		assertEquals(exception.getMessage(), "Rule violation: Column already contains the value 1. Column (4), Row (1).");	
 	}
 	
 	@Test
@@ -88,8 +93,12 @@ public class PuzzleUnitTest {
 		Puzzle testPuzzle2 = new Puzzle();
 		// Use the bottom, right grid of the puzzle to test that duplicate values cannot be added.
 		testPuzzle2.setCell(0, 0, 1);	// Add a 1 to column 1, row 1.
-		testPuzzle2.setCell(2, 2, 1);	// Add a 1 to column 3, row 3.
-		assertEquals(1, testPuzzle2.getCell(2, 2), "Adding a duplicate value to column 3, row 3 worked");	// test to see if the value of column 9, row 9 is 1.
+		
+		Exception exception = assertThrows(Exception.class, () -> {
+			testPuzzle2.setCell(2, 2, 1);	// Add a 1 to column 3, row 3.
+		});
+		
+		assertEquals(exception.getMessage(), "Rule violation: Grid already contains the value 1. Column (2), Row (2).");
 	}
 	
 	@Test
@@ -97,8 +106,12 @@ public class PuzzleUnitTest {
 		Puzzle testPuzzle2 = new Puzzle();
 		// Use the bottom, right grid of the puzzle to test that duplicate values cannot be added.
 		testPuzzle2.setCell(3, 0, 1);	// Add a 1 to column 4, row 1.
-		testPuzzle2.setCell(5, 2, 1);	// Add a 1 to column 6, row 3.
-		assertEquals(1, testPuzzle2.getCell(5, 2), "Adding a duplicate value to column 6, row 3 worked");	// test to see if the value of column 9, row 9 is 1.
+		
+		Exception exception = assertThrows(Exception.class, () -> {
+			testPuzzle2.setCell(5, 2, 1);	// Add a 1 to column 6, row 3.
+		});
+		
+		assertEquals(exception.getMessage(), "Rule violation: Grid already contains the value 1. Column (5), Row (2).");
 	}
 	
 	@Test
@@ -106,8 +119,12 @@ public class PuzzleUnitTest {
 		Puzzle testPuzzle2 = new Puzzle();
 		// Use the bottom, right grid of the puzzle to test that duplicate values cannot be added.
 		testPuzzle2.setCell(3, 6, 1);	// Add a 1 to column 4, row 7.
-		testPuzzle2.setCell(5, 8, 1);	// Add a 1 to column 6, row 9.
-		assertEquals(1, testPuzzle.getCell(5, 8), "Adding a duplicate value to column 6, row 9 worked");	// test to see if the value of column 9, row 9 is 1.
+		
+		Exception exception = assertThrows(Exception.class, () -> {
+			testPuzzle2.setCell(5, 8, 1);	// Add a 1 to column 6, row 9.
+		});
+		
+		assertEquals(exception.getMessage(), "Rule violation: Grid already contains the value 1. Column (5), Row (8).");
 	}
 	
 	@Test
@@ -115,8 +132,12 @@ public class PuzzleUnitTest {
 		Puzzle testPuzzle2 = new Puzzle();
 		// Use the bottom, right grid of the puzzle to test that duplicate values cannot be added.
 		testPuzzle2.setCell(6, 6, 1);	// Add a 1 to row 7, column 7.
-		testPuzzle2.setCell(8, 8, 1);	// Add a 1 to row 9, column 9.
-		assertEquals(1, testPuzzle.getCell(8, 8), "Adding a duplicate value to column 9, row 9 worked");	// test to see if the value of column 9, row 9 is 1.
+		
+		Exception exception = assertThrows(Exception.class, () -> {
+			testPuzzle2.setCell(8, 8, 1);	// Add a 1 to row 9, column 9.
+		});
+		
+		assertEquals(exception.getMessage(), "Rule violation: Grid already contains the value 1. Column (8), Row (8).");
 	}
 	
 }
